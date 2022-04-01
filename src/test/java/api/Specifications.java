@@ -21,6 +21,15 @@ public class Specifications {
                 .build();
     }
 
+    public static RequestSpecification requestSpecificationPost(){
+        return new RequestSpecBuilder()
+                .setBaseUri("http://mcat-aqa2-01.yc.mvideo.ru:8180/")
+                .setBasePath("api/logistic/attributes/view/query/listing")
+                .setBody("{\"filters\":[],\"requiredFields\":[]}")
+                .setContentType(ContentType.JSON)
+                .build();
+    }
+
     public static ResponseSpecification responseSpecification(){
         return new ResponseSpecBuilder()
                 .expectStatusCode(200)

@@ -1,12 +1,14 @@
 package api;
 
 import io.restassured.http.Headers;
+import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import io.restassured.specification.ResponseSpecification;
 import org.junit.jupiter.api.Test;
 
 import java.sql.SQLOutput;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -21,7 +23,8 @@ public class ReqresTest {
           given().log().uri()
                   .when()
                   .get("")
-                  .then().body("page", equalTo(2)).log().body(); // простая проверка соответствия значения поля ожидаемому значению. Get-метод
+                  .then().body("page", equalTo(2)).log().body(); // простая проверка соответствия значения
+        // поля ожидаемому значению. Get-метод
     }
 
     @Test
@@ -32,7 +35,8 @@ public class ReqresTest {
                 .get("")
                 .then()
                 .body("page", equalTo(2))
-                .body("data.email[0]", equalTo("michael.lawson@reqres.in")) // проверка соответствия значения поля массива ожидаемому значению. Get-метод
+                .body("data.email[0]", equalTo("michael.lawson@reqres.in")) // проверка соответствия значения
+                // поля массива ожидаемому значению. Get-метод
                 .log().body();
     }
 
@@ -95,6 +99,30 @@ public class ReqresTest {
                 .get("");
         List<String> nameOfHeroes = response.path("data.findAll {it.email}.first_name"); // извлекли из json-ответа только имена персонажей
         System.out.println("nameOfHeroes --> " + nameOfHeroes);
+    }
+
+    @Test
+    public void getAllElementsSum(){
+        Specifications.InstallSpecification(Specifications.requestSpecificationGet(), Specifications.responseSpecification());
+        Response response = given().log().uri()
+                .get("")
+                .then().log().all()
+                .extract().response();
+        JsonPath jsonPath = response.jsonPath();
+        String allValueMin = jsonPath.get("data.collect {it.first_name}.sum()"); // суммируем как числа так и строки
+        System.out.println("nameOfHeroes --> " + allValueMin);
+    }
+
+    @Test
+    public void getAllElementsId(){
+        Specifications.InstallSpecification(Specifications.requestSpecificationGet(), Specifications.responseSpecification());
+        Response response = given().log().uri()
+                .get("")
+                .then().log().all()
+                .extract().response();
+        JsonPath jsonPath = response.jsonPath();
+        List<String> allValueMin = jsonPath.get("data.findAll {it.first_name}.id"); // извлекаем все id
+        System.out.println("nameOfHeroes --> " + allValueMin);
     }
 
 

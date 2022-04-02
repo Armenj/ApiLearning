@@ -2,6 +2,8 @@ package api;
 
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
+import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -20,6 +22,7 @@ public class McatTest {
                 .extract().response();
         JsonPath jsonPath = response.jsonPath();
         Map<String,?> attributes = jsonPath.get("content.attributes[0].find {attributeId = 'product_sap_code'}");
+
         /**
          * Выводим первый блок ответа в виде мапа
          *     "content": [
@@ -45,11 +48,13 @@ public class McatTest {
         /**
          * Выводим максимальное значение поля value
          */
-//        String allValueMin = jsonPath.get("content.attributes[0].findAll {it.attributeId = 'product_sap_code'}.value");
+        ArrayList<Map<String,?>> allValueMin = jsonPath.get("content.findAll {it.attributeId = '%s'}.findAll {it.value = '%s'}");
+
         System.out.println(attributes);
         System.out.println(singleAttributes);
         System.out.println(allValue);
         System.out.println(allValueMax);
+        System.out.println(allValueMin);
 
 
     }
